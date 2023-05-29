@@ -1,3 +1,46 @@
+## Notes
+
+### Installation of [Google2FA for Laravel](https://github.com/antonioribeiro/google2fa-laravel)
+
+```sh
+$ composer require pragmarx/google2fa-laravel
+$ php artisan vendor:publish --provider="PragmaRX\Google2FALaravel\ServiceProvider"
+$ php artisan make:migration google_2fa
+# Create the migration file content (see below)
+$ php artisan migrate
+```
+
+```php
+<?php
+// Implementation of google auth in User table
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('google2fa_secret')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('google2fa_secret');
+        });
+    }
+};
+```
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
