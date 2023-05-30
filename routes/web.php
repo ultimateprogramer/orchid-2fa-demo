@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Google2FA;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Google 2FA landing page
+Route::get('/google2fa/index', [Google2FA::class, 'index'])
+    ->name('google2fa.index')
+    ->middleware('auth');
+
+// Authenticate Google 2FA
+Route::post('/google2fa/authenticate', [Google2FA::class, 'authenticate'])
+    ->name('google2fa.authenticate')
+    ->middleware('auth');

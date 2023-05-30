@@ -8,6 +8,10 @@ $ php artisan vendor:publish --provider="PragmaRX\Google2FALaravel\ServiceProvid
 $ php artisan make:migration google_2fa
 # Create the migration file content (see below)
 $ php artisan migrate
+# For the QR Code
+$ composer require pragmarx/google2fa-qrcode
+# QRCode Service to use
+$ composer require chillerlan/php-qrcode
 ```
 
 ```php
@@ -40,6 +44,12 @@ return new class extends Migration
     }
 };
 ```
+
+### Dependencies
+
+You will need to install the imagick extension for PHP. More details here:
+
+* [https://github.com/chillerlan/php-qrcode](https://github.com/chillerlan/php-qrcode)
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 

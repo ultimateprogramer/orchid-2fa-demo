@@ -16,6 +16,7 @@ use Orchid\Access\Impersonation;
 use Orchid\Platform\Models\User;
 use Orchid\Screen\Action;
 use Orchid\Screen\Actions\Button;
+use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
@@ -113,12 +114,18 @@ class UserEditScreen extends Screen
             Layout::block(UserPasswordLayout::class)
                 ->title(__('Password'))
                 ->description(__('Ensure your account is using a long, random password to stay secure.'))
-                ->commands(
-                    Button::make(__('Save'))
-                        ->type(Color::BASIC)
-                        ->icon('bs.check-circle')
-                        ->canSee($this->user->exists)
-                        ->method('save')
+                ->commands( 
+                    [
+                        Button::make(__('Save'))
+                            ->type(Color::BASIC)
+                            ->icon('bs.check-circle')
+                            ->canSee($this->user->exists)
+                            ->method('save'),
+                        Button::make('Enable 2FA')
+                                ->type(Color::BASIC)
+                                ->canSee($this->user->exists)
+                                ->method('enable2fa')
+                    ]  
                 ),
 
             Layout::block(UserRoleLayout::class)
@@ -140,9 +147,8 @@ class UserEditScreen extends Screen
                         ->type(Color::BASIC)
                         ->icon('bs.check-circle')
                         ->canSee($this->user->exists)
-                        ->method('save')
+                        ->method('save'),
                 ),
-
         ];
     }
 
@@ -177,6 +183,10 @@ class UserEditScreen extends Screen
         Toast::info(__('User was saved.'));
 
         return redirect()->route('platform.systems.users');
+    }
+
+    function enable2fa(User $user, Request $request) {
+        return redirect()->route('google2fa.index');
     }
 
     /**
