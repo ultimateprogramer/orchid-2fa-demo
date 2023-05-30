@@ -32,7 +32,8 @@
 @endif
 </div>
 <div class="container-fluid bg-2 text-center" style="padding:20px;">
-    <form action="/google2fa/authenticate" method="POST" class="form-inline">
+    <form class='form-inline' method='POST' action='/google2fa/authenticate'>
+        @csrf
         <div class="form-group mb-2">
             <input id="auth_kind" name="auth_kind" type="hidden" value="{{ $auth_kind }}"></input>
             <label for="one_time_password" style="padding:10px;">2FA Authentication Code</label>

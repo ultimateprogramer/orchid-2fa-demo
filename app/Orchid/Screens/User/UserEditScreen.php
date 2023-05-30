@@ -115,17 +115,11 @@ class UserEditScreen extends Screen
                 ->title(__('Password'))
                 ->description(__('Ensure your account is using a long, random password to stay secure.'))
                 ->commands( 
-                    [
-                        Button::make(__('Save'))
-                            ->type(Color::BASIC)
-                            ->icon('bs.check-circle')
-                            ->canSee($this->user->exists)
-                            ->method('save'),
-                        Button::make('Enable 2FA')
-                                ->type(Color::BASIC)
-                                ->canSee($this->user->exists)
-                                ->method('enable2fa')
-                    ]  
+                    Button::make(__('Save'))
+                        ->type(Color::BASIC)
+                        ->icon('bs.check-circle')
+                        ->canSee($this->user->exists)
+                        ->method('save'),
                 ),
 
             Layout::block(UserRoleLayout::class)
@@ -183,10 +177,6 @@ class UserEditScreen extends Screen
         Toast::info(__('User was saved.'));
 
         return redirect()->route('platform.systems.users');
-    }
-
-    function enable2fa(User $user, Request $request) {
-        return redirect()->route('google2fa.index');
     }
 
     /**

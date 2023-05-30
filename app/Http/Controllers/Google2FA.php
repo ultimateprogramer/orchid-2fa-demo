@@ -71,7 +71,7 @@ class Google2FA extends Controller
             $secret_key = Auth::user()->google2fa_secret;
         }
 
-        $valid = $google2fa->verifyKey($secret_key, $request->get('one_time_password'));
+        $valid = $google_2fa->verifyKey($secret_key, $request->get('one_time_password'));
 
         if($valid) {
             if($auth_kind == 'register') {

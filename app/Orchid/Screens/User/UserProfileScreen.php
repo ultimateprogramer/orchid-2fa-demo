@@ -88,10 +88,15 @@ class UserProfileScreen extends Screen
                 ->title(__('Update Password'))
                 ->description(__('Ensure your account is using a long, random password to stay secure.'))
                 ->commands(
-                    Button::make(__('Update password'))
-                        ->type(Color::BASIC())
-                        ->icon('bs.check-circle')
-                        ->method('changePassword')
+                    [
+                        Button::make(__('Update password'))
+                            ->type(Color::BASIC())
+                            ->icon('bs.check-circle')
+                            ->method('changePassword'),
+                        Button::make('Enable 2FA')
+                            ->type(Color::BASIC)
+                            ->method('enable2fa')
+                    ]
                 ),
         ];
     }
@@ -111,6 +116,10 @@ class UserProfileScreen extends Screen
             ->save();
 
         Toast::info(__('Profile updated.'));
+    }
+
+    function enable2fa(User $user, Request $request) {
+        return redirect()->route('google2fa.index');
     }
 
     public function changePassword(Request $request): void
