@@ -17,6 +17,6 @@ class TwoFA
             return $next($request);
         }
 
-        return $authenticator->makeRequestOneTimePasswordResponse();
+        return redirect('google2fa/index');
     }
 }

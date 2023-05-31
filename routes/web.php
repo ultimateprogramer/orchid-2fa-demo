@@ -21,9 +21,9 @@ Route::get('/', function () {
 // Google 2FA landing page
 Route::get('/google2fa/index', [Google2FA::class, 'index'])
     ->name('google2fa.index')
-    ->middleware(['web', 'auth']);
+    ->middleware(['auth']);
 
 // Authenticate Google 2FA
 Route::post('/google2fa/authenticate', [Google2FA::class, 'authenticate'])
     ->name('google2fa.authenticate')
-    ->middleware(['web', 'auth']);
+    ->middleware(['auth']);

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use chillerlan\QRCode\QRCode;
+use PragmaRX\Google2FALaravel\Support\Constants;
 
 class Google2FA extends Controller
 {
@@ -74,12 +75,17 @@ class Google2FA extends Controller
         $valid = $google_2fa->verifyKey($secret_key, $request->get('one_time_password'));
 
         if($valid) {
+            $request->session()->put(Constants::SESSION_AUTH_PASSED, true);
+
             if($auth_kind == 'register') {
                 Auth::user()->google2fa_secret = $secret_key;
                 Auth::user()->save();
             }
 
             return redirect('admin/main');
+        } else {
+            $request->session()->put(Constants::SESSION_AUTH_PASSED, false);
+            return redirect('google2fa/index?pass=no');
         }
     }
 }
