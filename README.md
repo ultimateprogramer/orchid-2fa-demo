@@ -267,6 +267,35 @@ function disable2fa() {
 }
 ```
 
+### Other 2FA configs
+
+```php
+# File: app/Http/Kernel.php
+
+protected $middlewareAliases = [
+    'auth' => \App\Http\Middleware\Authenticate::class,
+    'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+    'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+    'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+    'can' => \Illuminate\Auth\Middleware\Authorize::class,
+    'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+    'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+    'signed' => \App\Http\Middleware\ValidateSignature::class,
+    'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+    'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    '2fa' => \App\Http\Middleware\TwoFA::class,
+];
+```
+
+```php
+# File: config/platform.php
+
+'middleware' => [
+    'public'  => ['web', 'cache.headers:private;must_revalidate;etag'],
+    'private' => ['web', 'platform', 'cache.headers:private;must_revalidate;etag', '2fa'],
+],
+```
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
