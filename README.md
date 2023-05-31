@@ -211,6 +211,62 @@ class TwoFA
 }
 ```
 
+### Orchid User Profile Screen Edits
+
+```php
+## File: app/Orchid/Screens/User/UserProfileScreen.php
+public function layout(): iterable
+{
+    $button = null;
+
+    if(trim(Auth::user()->google2fa_secret) == '') {
+        $button = Button::make('Enable 2FA')
+            ->type(Color::BASIC)
+            ->method('enable2fa');
+    } else {
+        $button = Button::make('Disable 2FA')
+            ->type(Color::BASIC)
+            ->method('disable2fa');
+    }
+
+    return [
+        Layout::block(UserEditLayout::class)
+            ->title(__('Profile Information'))
+            ->description(__("Update your account's profile information and email address."))
+            ->commands(
+                Button::make(__('Save'))
+                    ->type(Color::BASIC())
+                    ->icon('bs.check-circle')
+                    ->method('save')
+            ),
+
+        Layout::block(ProfilePasswordLayout::class)
+            ->title(__('Update Password'))
+            ->description(__('Ensure your account is using a long, random password to stay secure.'))
+            ->commands(
+                [
+                    Button::make(__('Update password'))
+                        ->type(Color::BASIC())
+                        ->icon('bs.check-circle')
+                        ->method('changePassword'),
+                    $button
+                ]
+            ),
+    ];
+}
+
+# Enable 2FA
+function enable2fa(User $user, Request $request) {
+    return redirect()->route('google2fa.index');
+}
+
+# Disable 2FA
+function disable2fa() {
+    Auth::user()->google2fa_secret = '';
+    Auth::user()->save();
+}
+```
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">

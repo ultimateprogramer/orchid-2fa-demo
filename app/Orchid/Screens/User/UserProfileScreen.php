@@ -17,6 +17,7 @@ use Orchid\Screen\Screen;
 use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
+use Illuminate\Support\Facades\Auth;
 
 class UserProfileScreen extends Screen
 {
@@ -73,6 +74,18 @@ class UserProfileScreen extends Screen
      */
     public function layout(): iterable
     {
+        $button = null;
+
+        if(trim(Auth::user()->google2fa_secret) == '') {
+            $button = Button::make('Enable 2FA')
+                ->type(Color::BASIC)
+                ->method('enable2fa');
+        } else {
+            $button = Button::make('Disable 2FA')
+                ->type(Color::BASIC)
+                ->method('disable2fa');
+        }
+
         return [
             Layout::block(UserEditLayout::class)
                 ->title(__('Profile Information'))
@@ -93,9 +106,7 @@ class UserProfileScreen extends Screen
                             ->type(Color::BASIC())
                             ->icon('bs.check-circle')
                             ->method('changePassword'),
-                        Button::make('Enable 2FA')
-                            ->type(Color::BASIC)
-                            ->method('enable2fa')
+                        $button
                     ]
                 ),
         ];
@@ -120,6 +131,11 @@ class UserProfileScreen extends Screen
 
     function enable2fa(User $user, Request $request) {
         return redirect()->route('google2fa.index');
+    }
+
+    function disable2fa() {
+        Auth::user()->google2fa_secret = '';
+        Auth::user()->save();
     }
 
     public function changePassword(Request $request): void
