@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use chillerlan\QRCode\QRCode;
 use PragmaRX\Google2FALaravel\Support\Constants;
+use PragmaRX\Google2FALaravel\Support\Authenticator;
 
 class Google2FA extends Controller
 {
@@ -65,6 +66,7 @@ class Google2FA extends Controller
         $one_time_password = $request->post('one_time_password');
         $secret_key = null;
         $google_2fa = new Google2FALib();
+        $authenticator = app(Authenticator::class)->boot($request);
 
         if($auth_kind == 'register') {
             $secret_key = $request->session()->get('secret_key');
@@ -75,7 +77,7 @@ class Google2FA extends Controller
         $valid = $google_2fa->verifyKey($secret_key, $request->get('one_time_password'));
 
         if($valid) {
-            $request->session()->put(Constants::SESSION_AUTH_PASSED, true);
+            $authenticator->login();
 
             if($auth_kind == 'register') {
                 Auth::user()->google2fa_secret = $secret_key;
@@ -84,7 +86,6 @@ class Google2FA extends Controller
 
             return redirect('admin/main');
         } else {
-            $request->session()->put(Constants::SESSION_AUTH_PASSED, false);
             return redirect('google2fa/index?pass=no');
         }
     }
